@@ -28,8 +28,8 @@
 -Dswing.boldMetal=false
 -Dsun.locale.formatasdefault=true
 
--classpath/p /root/ib-automater.jar
+-classpath/p /root/ib-gateway-login.jar:/root/kotlin-stdlib.jar
 
--javaagent:/root/ib-automater.jar
+-javaagent:/root/ib-gateway-login.jar
 
 ### keep on update

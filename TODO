@@ -1,2 +1,2 @@
 - bug: Gateway GUI always defaults to security card
-- build ib-automated.jar on the fly (migrate to kotlin?)
+- embed ib-gateway-login sources into project

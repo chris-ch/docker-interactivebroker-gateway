@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM openjdk:20-jdk-slim
 
 LABEL maintainer="Christophe Alexandre <christophe.alexandre@pm.me>"
 
@@ -12,6 +12,12 @@ RUN  apt-get update \
   && apt-get install -y x11vnc \
   && apt-get install -y socat \
   && apt-get install -y software-properties-common
+
+RUN apt-get install -y git
+
+RUN wget "https://services.gradle.org/distributions/gradle-7.5.1-bin.zip" -O gradle-install.zip
+RUN mkdir /opt/gradle
+RUN unzip -d /opt/gradle gradle-install.zip
 
 # Setup IB TWS
 RUN mkdir -p /opt/TWS
@@ -32,7 +38,14 @@ ADD ./vnc-config/xvfb_init /etc/init.d/xvfb
 ADD ./vnc-config/vnc_init /etc/init.d/vnc
 ADD ./vnc-config/xvfb-daemon-run /usr/bin/xvfb-daemon-run
 
-ADD ./ib-automater.jar /root/ib-automater.jar
+WORKDIR /root
+
+RUN git clone https://github.com/chris-ch/ib-gateway-login.git
+RUN /opt/gradle/gradle-7.5.1/bin/gradle --project-dir=ib-gateway-login jar
+RUN cp /root/ib-gateway-login/build/libs/ib-gateway-login-1.0-SNAPSHOT.jar /root/ib-gateway-login.jar
+
+RUN wget https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.7.20/kotlin-stdlib-1.7.20.jar -O /root/kotlin-stdlib.jar
+
 ADD ./ibgateway.vmoptions /root/Jts/ibgateway/1012/ibgateway.vmoptions
 ADD runscript.sh runscript.sh
 
